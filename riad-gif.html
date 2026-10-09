@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>RIAD HACHEMI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: #050505;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            font-family: "Times New Roman", serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            background: #050505;
+            cursor: url('https://i.imgur.com/RUE567I.gif'), auto;
+            animation: fadeIn 2s ease both;
+        }
+
+        /* Background image layer */
+        .background {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Dark overlay improves text readability */
+        .background-shade {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.12);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 30px 16px;
+            text-align: center;
+            animation: slideUp 1s ease 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); }
+            to { transform: translateY(0); }
+        }
+
+        h1 {
+            color: #ffff00;
+            text-shadow: 4px 4px 0 #000,
+                         0 0 20px rgba(255, 255, 0, 0.5);
+            font-size: clamp(2.5rem, 9vw, 5em);
+            margin-bottom: 40px;
+            letter-spacing: clamp(3px, 1.2vw, 8px);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .github-btn {
+            display: inline-block;
+            color: #ffff00;
+            border: 3px solid #ffff00;
+            padding: 12px 30px;
+            font-size: 1.3em;
+            text-decoration: none;
+            background: rgba(0, 0, 0, 0.7);
+            transition: all 0.4s;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .github-btn:hover {
+            background: #ffff00;
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffff00;
+        }
+
+        .github-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.7s;
+        }
+
+        .github-btn:hover::after {
+            left: 100%;
+        }
+
+        .access-link {
+            color: #00ffff;
+            font-size: 1.1em;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: all 0.3s;
+            display: block;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .access-link:hover {
+            opacity: 1;
+            text-shadow: 0 0 10px #00ffff;
+            transform: scale(1.05);
+        }
+
+        /* Password popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.96);
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            z-index: 1000;
+            width: min(500px, calc(100vw - 32px));
+            max-height: 90vh;
+            max-height: 90dvh;
+            overflow-y: auto;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .popup.active {
+            display: block;
+            animation: popupAppear 0.5s ease;
+        }
+
+        @keyframes popupAppear {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .access-image {
+            display: block;
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 25px;
+        }
+
+        .passcode-input {
+            display: block;
+            width: 100%;
+            min-height: 44px;
+            padding: 10px;
+            font-family: "Times New Roman", serif;
+            font-size: 1em;
+            background: #000;
+            color: white;
+            border: 1px solid #333;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .passcode-input:focus {
+            border-color: #00ff00;
+        }
+
+        .submit-btn {
+            width: 100%;
+            min-height: 44px;
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            font-family: "Times New Roman", serif;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #111;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+
+        /* Success popup */
+        .success-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            width: min(560px, calc(100vw - 32px));
+            max-height: 90vh;
+            max-height: 90dvh;
+            overflow-y: auto;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            padding: 20px;
+        }
+
+        .success-popup.active {
+            display: block;
+            animation: popupAppear 0.5s ease;
+        }
+
+        .success-image {
+            display: block;
+            width: 100%;
+            height: clamp(150px, 45vw, 300px);
+            object-fit: cover;
+            margin-bottom: 25px;
+        }
+
+        .access-button {
+            display: inline-block;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            text-decoration: none;
+            background: rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .access-button:hover {
+            background: #00ff00;
+            color: #000;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .popup {
+                padding: 24px 18px;
+            }
+
+            .access-image {
+                height: 150px;
+            }
+
+            .access-link {
+                font-size: 1em;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body,
+            .content,
+            .popup,
+            .success-popup {
+                animation-duration: 0.01ms;
+                animation-delay: 0ms;
+            }
+
+            .github-btn,
+            .access-link,
+            .access-button {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background GIF -->
+    <img
+        class="background"
+        src="https://i.imgur.com/SHZe50s.gif"
+        alt=""
+        aria-hidden="true"
+        fetchpriority="high"
+    >
+
+    <div class="background-shade"></div>
+
+    <main class="content">
+        <h1>I'M RIAD</h1>
+
+        <a
+            href="https://github.com/Riad-Hachemi"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="github-btn"
+        >
+            GitHub
+        </a>
+
+        <a href="#"
+           class="access-link"
+           id="openAccess"
+        >
+            ADVANCED ACCESS REQUIRES PASSCODE
+        </a>
+    </main>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Password popup -->
+    <section
+        class="popup"
+        id="accessPopup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="accessTitle"
+    >
+        <button
+            class="close-btn"
+            id="closeAccess"
+            type="button"
+            aria-label="Close"
+        >✕</button>
+
+        <img
+            src="https://t3.ftcdn.net/jpg/10/25/26/22/360_F_1025262223_T0UwLejbRGkTpMGeBAVktVX4OSuJW8w8.jpg"
+            alt="Access required"
+            class="access-image"
+        >
+
+        <h2
+            id="accessTitle"
+            style="color:#ffff00; margin-bottom:20px; font-size:1.25rem;"
+        >
+            ENTER PASSCODE FOR ADVANCED ACCESS
+        </h2>
+
+        <form id="passcodeForm" method="POST" ="https://riad-access.hac-riad.workers.dev/login">
+            <input
+                type="password"
+                class="passcode-input"
+                id="passcodeInput"
+                name="passcode"
+                placeholder="Type secret passcode..."
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-label="Secret passcode"
+                required
+            >
+
+            <button class="submit-btn" type="submit">
+                SUBMIT
+            </button>
+        </form>
+    </section>
+
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const accessPopup = document.getElementById('accessPopup');
+        const passcodeInput = document.getElementById('passcodeInput');
+        const openAccess = document.getElementById('openAccess');
+        const closeAccess = document.getElementById('closeAccess');
+
+        function showAccessPopup() {
+            overlay.classList.add('active');
+            accessPopup.classList.add('active');
+            setTimeout(() => passcodeInput.focus(), 100);
+        }
+
+        function closeAllPopups() {
+            accessPopup.classList.remove('active');
+            overlay.classList.remove('active');
+            passcodeInput.value = '';
+            passcodeInput.placeholder = 'Type secret passcode...';
+        }
+
+        openAccess.addEventListener('click', (event) => {
+            event.preventDefault();
+            showAccessPopup();
+        });
+
+        closeAccess.addEventListener('click', closeAllPopups);
+        overlay.addEventListener('click', closeAllPopups);
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') closeAllPopups();
+        });
+
+        // The server (Cloudflare Worker) sends the visitor back here with ?error=1 if the passcode was wrong
+        if (new URLSearchParams(location.search).has('error')) {
+            showAccessPopup();
+            passcodeInput.placeholder = 'Wrong passcode';
+            history.replaceState(null, '', location.pathname);
+        }
+    </script>
+</body>
+</html>
